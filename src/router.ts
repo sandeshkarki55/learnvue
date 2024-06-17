@@ -1,14 +1,17 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
-import InvoicesPage from './pages/InvoicesPage.vue'
-
+import { createRouter, createWebHistory } from 'vue-router'
+import InvoicesPage from './pages/Invoice/InvoicesPage.vue'
+import CreateInvoicePage from './pages/Invoice/CreateInvoicePage.vue'
+import HomePage from './pages/HomePage.vue'
 
 const routes = [
-  { path: '/', component: InvoicesPage },
+    { path: '/invoices', component: InvoicesPage },
+    { path: '/', component: HomePage },
+    { path: '/invoices/create', component: CreateInvoicePage }
 ]
 
 const router = createRouter({
-  history: createMemoryHistory(),
-  routes,
+    history: createWebHistory(),
+    routes,
 })
 
 export default router

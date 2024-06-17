@@ -1,7 +1,15 @@
 <script setup lang="ts">
-import InvoiceTable from '../components/InvoiceTable.vue'
-
+import InvoiceTable from '../../components/InvoiceTable.vue'
+import Breadcrumb from '../../components/Breadcrumb.vue'
+import { useRoute, useRouter } from 'vue-router'
 import { ref } from 'vue'
+
+const router = useRouter();
+
+const breadCrumbs = ref([
+    { name: 'Home', link: '/' },
+    { name: 'Invoices', link: 'invoices' },
+]);
 
 const invoices = ref([
     { number: 'INV-001', date: '2021-10-01', amount: 1000, status: 'Paid' },
@@ -16,12 +24,18 @@ const invoices = ref([
     { number: 'INV-010', date: '2021-10-10', amount: 10000, status: 'Paid' },
 ]);
 
+function goToCreateInvoice() {
+    router.push('invoices/create');
+}
+
 </script>
 <template>
+    <Breadcrumb :breadCrumbs="breadCrumbs" />
+    <br>
     <div class="card">
         <div class="card-header">
             Invoices
-            <button class="btn btn-sm btn-outline-primary float-end">
+            <button class="btn btn-sm btn-outline-primary float-end" @click="goToCreateInvoice">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg"
                     viewBox="0 0 16 16">
                     <path fill-rule="evenodd"

@@ -10,8 +10,8 @@ defineProps(['breadCrumbs']);
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li v-for="breadcrumb in breadCrumbs" :class="['breadcrumb-item', breadcrumb.link==''?'active':'']">
-                <a :href="breadcrumb.link">{{
-                    breadcrumb.name }}</a>
+                <RouterLink :to="breadcrumb.link">{{
+                    breadcrumb.name }}</RouterLink>
             </li>
         </ol>
     </nav>
