@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import InvoiceTable from '../../components/InvoiceTable.vue'
 import Breadcrumb from '../../components/Breadcrumb.vue'
-import Invoice from '../../models/invoice'
+import type { Invoice } from '../../models/invoice'
 
-import { ref, defineProps } from 'vue'
+import { ref } from 'vue'
 
-const invoice = ref({
-    number: '001',
+const invoice = ref<Invoice>({
+    number: 1,
     date: '2021-10-01',
     amount: 1000,
-    status: 'Paid',
+    status: 'paid',
     invoiceLines: [
-    { description: 'Item 1', quantity: 1, price: 1000 },
-    { description: 'Item 2', quantity: 2, price: 2000 },
-    { description: 'Item 3', quantity: 3, price: 3000 }
-]});
+        { description: '', quantity: 0, price: 0 }
+    ]
+});
 
 const breadCrumbs = ref([
     { name: 'Home', link: '/' },
@@ -23,10 +21,7 @@ const breadCrumbs = ref([
 ]);
 
 function addLine() {
-    console.log('Add Line');
     invoice.value.invoiceLines.push({ description: '', quantity: 0, price: 0 });
-
-    console.log(invoice.value.invoiceLines);
 }
 </script>
 <template>
@@ -41,28 +36,28 @@ function addLine() {
                 <div class="col-6">
                     <label for="invoiceNumber" class="form-label">Invoice Number</label>
                     <input type="number" class="form-control" id="invoiceNumber" placeholder="Enter invoice number"
-                        v-bind:value="invoice.number">
+                        v-model="invoice.number">
                 </div>
                 <div class="w-100 d-none d-md-block"></div>
                 <div class="col-6">
                     <label for="invoiceAmount" class="form-label">Amount</label>
-                    <input type="number" class="form-control" id="invoiceAmount" v-bind:value="invoice.amount"
+                    <input type="number" class="form-control" id="invoiceAmount" v-model="invoice.amount"
                         placeholder="Enter invoice Amount ($0.00)">
                 </div>
                 <div class="w-100 d-none d-md-block"></div>
                 <div class="col-6">
                     <label for="invoiceDate" class="form-label">Date</label>
                     <input type="date" class="form-control" id="invoiceDate" placeholder="Enter invoice date"
-                        v-bind:value="invoice.date">
+                        v-model="invoice.date">
                 </div>
                 <div class="w-100 d-none d-md-block"></div>
                 <div class="col-6">
                     <label for="inputStatus" class="form-label">Status</label>
-                    <select id="inputStatus" class="form-select" v-bind:value="invoice.status">
+                    <select id="inputStatus" class="form-select" v-model="invoice.status">
                         <option selected>Choose...</option>
-                        <option>New</option>
-                        <option>Paid</option>
-                        <option>Unpaid</option>
+                        <option value="new">New</option>
+                        <option value="paid">Paid</option>
+                        <option value="unpaid">Unpaid</option>
                     </select>
                 </div>
                 <div class="w-100 d-none d-md-block"></div>
@@ -81,18 +76,18 @@ function addLine() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="invoiceLine in invoice.invoiceLines">
+                            <tr v-for="invoiceLine in invoice.invoiceLines" v-bind:key="invoiceLine.description">
                                 <td>
                                     <input type="text" class="form-control" id="item" placeholder="Enter item"
-                                        v-bind:value="invoiceLine.description">
+                                        v-model="invoiceLine.description">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" id="quantity" placeholder="Enter quantity"
-                                        v-bind:value="invoiceLine.quantity">
+                                        v-model="invoiceLine.quantity">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" id="unitPrice"
-                                        placeholder="Enter unit price" v-bind:value="invoiceLine.price">
+                                        placeholder="Enter unit price" v-model="invoiceLine.price">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control disabled" id="total"

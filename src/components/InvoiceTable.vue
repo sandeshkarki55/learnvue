@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
+import type { Invoice } from '@/models/invoice';
+import { defineProps, defineEmits } from 'vue';
 
-defineProps(['invoices']);
+defineProps({
+    invoices: { type: Array as () => Invoice[], required: true }
+});
+
 defineEmits(['delete']);
 
 
@@ -27,7 +31,7 @@ function currency(amount: number) {
         </thead>
 
         <tbody>
-            <tr v-for="invoice in invoices">
+            <tr v-for="invoice in invoices" v-bind:key="invoice.id">
                 <td>{{ invoice.number }}</td>
                 <td>{{ invoice.date }}</td>
                 <td>{{ currency(invoice.amount) }}</td>
