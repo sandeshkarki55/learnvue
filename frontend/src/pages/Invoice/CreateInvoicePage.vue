@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import axios from 'axios';
 import Breadcrumb from '../../components/Breadcrumb.vue'
 import type { Invoice } from '../../models/invoice'
 
@@ -22,6 +23,16 @@ const breadCrumbs = ref([
 
 function addLine() {
     invoice.value.invoiceLines.push({ description: '', quantity: 0, price: 0 });
+}
+
+async function createInvoice() {
+    await axios.post('http://localhost:5234/api/Invoice', invoice.value)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 }
 </script>
 <template>
@@ -76,9 +87,9 @@ function addLine() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="invoiceLine in invoice.invoiceLines" v-bind:key="invoiceLine.description">
+                            <tr v-for="invoiceLine in invoice.invoiceLines" v-bind:key="invoiceLine.id">
                                 <td>
-                                    <input type="text" class="form-control" id="item" placeholder="Enter item"
+                                    <input type="text" class="form-control" id="description" placeholder="Enter item"
                                         v-model="invoiceLine.description">
                                 </td>
                                 <td>
@@ -101,7 +112,7 @@ function addLine() {
                     </table>
                 </div>
                 <div class="col-6">
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-primary" @click="createInvoice">Save</button>
                 </div>
             </form>
         </div>

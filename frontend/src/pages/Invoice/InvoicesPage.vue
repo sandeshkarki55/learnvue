@@ -5,6 +5,7 @@ import ConfirmModal from '../../components/ConfirmModal.vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import type { Invoice } from '@/models/invoice';
+import axios from 'axios'
 
 const router = useRouter();
 
@@ -13,23 +14,24 @@ const breadCrumbs = ref([
     { name: 'Invoices', link: 'invoices' },
 ]);
 
-const invoices = ref<Invoice[]>([
-    { number: 1, date: '2021-10-01', amount: 1000, status: 'paid', invoiceLines: [] },
-    { number: 2, date: '2021-10-02', amount: 2000, status: 'paid', invoiceLines: [] },
-    { number: 3, date: '2021-10-03', amount: 3000, status: 'paid', invoiceLines: [] },
-    { number: 4, date: '2021-10-04', amount: 4000, status: 'paid', invoiceLines: [] },
-    { number: 5, date: '2021-10-05', amount: 5000, status: 'paid', invoiceLines: [] },
-    { number: 6, date: '2021-10-06', amount: 6000, status: 'paid', invoiceLines: [] },
-    { number: 7, date: '2021-10-07', amount: 7000, status: 'paid', invoiceLines: [] },
-    { number: 8, date: '2021-10-08', amount: 8000, status: 'paid', invoiceLines: [] },
-    { number: 9, date: '2021-10-09', amount: 9000, status: 'paid', invoiceLines: [] },
-    { number: 10, date: '2021-10-10', amount: 10000, status: 'paid', invoiceLines: [] },
-]);
+const invoices = ref<Invoice[]>([]);
+
+async function fetchInvoices() {
+    // Fetch invoices from the API
+    await axios.get<Invoice[]>('http://localhost:5234/api/Invoice')
+        .then((response) => {
+            invoices.value = response.data;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
 
 function goToCreateInvoice() {
     router.push('invoices/create');
 }
 
+fetchInvoices();
 </script>
 <template>
     <Breadcrumb :breadCrumbs="breadCrumbs" />
@@ -47,9 +49,9 @@ function goToCreateInvoice() {
             </button>
         </div>
         <div class="card-body">
-            <InvoiceTable :invoices="invoices" @delete="(invoiceNumber) => { 
-                
-             }" />
+            <InvoiceTable :invoices="invoices" @delete="(invoiceNumber) => {
+
+            }" />
         </div>
         <ConfirmModal header="Delete Invoice" body="Are you sure you want to delete this invoice?"
             primaryButtonText="Delete" secondaryButtonText="Cancel"
