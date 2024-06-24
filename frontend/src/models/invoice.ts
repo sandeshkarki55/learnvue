@@ -5,7 +5,7 @@ export interface Invoice {
     number: number
     amount: number
     date: string
-    status: 'paid' | 'pending' | 'new'
+    status: 'draft' | 'pending' | 'paid' | 'cancelled'
     invoiceLines: InvoiceLines[]
 }
 
