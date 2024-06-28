@@ -1,4 +1,4 @@
-namespace Accounting.Api.Dtos.Invoice;
+namespace Accounting.Api.Invoice.Dtos;
 public class CreateInvoiceDto
 {
     public required DateTime Date { get; set; }

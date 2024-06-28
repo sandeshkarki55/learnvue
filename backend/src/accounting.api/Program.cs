@@ -1,4 +1,7 @@
-var  AllowFrontEndCors = "AllowFrontEndCors";
+using Accounting.Api.Invoice;
+using Microsoft.EntityFrameworkCore;
+
+var AllowFrontEndCors = "AllowFrontEndCors";
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: AllowFrontEndCors,
-                      policy  =>
+                      policy =>
                       {
                           policy.AllowAnyOrigin()
                           .AllowAnyHeader()
@@ -19,6 +22,14 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<InvoiceDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+builder.Services.AddMediatR(c =>
+{
+    c.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 
 var app = builder.Build();
 

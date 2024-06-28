@@ -1,12 +1,11 @@
 using System.Linq.Expressions;
-using Accounting.Api.Dtos.Invoice;
-using Accounting.Api.Models;
+using Accounting.Api.Invoice.Dtos;
 
-namespace Accounting.Api.Mappings;
+namespace Accounting.Api.Invoice;
 public static class InvoiceMappings
 {
     //Invoice ==> GetInvoiceDto
-    public static Expression<Func<Invoice, GetInvoiceDto>> ToGetInvoiceDto => invoice => new GetInvoiceDto
+    public static Expression<Func<Models.Invoice, GetInvoiceDto>> ToGetInvoiceDto => invoice => new GetInvoiceDto
     {
         Id = invoice.Id,
         Number = invoice.Number,
@@ -14,21 +13,21 @@ public static class InvoiceMappings
         Amount = invoice.Amount,
         Status = invoice.Status.ToString()
     };
-    public static Func<Invoice, GetInvoiceDto> ToGetInvoiceDtoFunc = ToGetInvoiceDto.Compile();
+    public static Func<Models.Invoice, GetInvoiceDto> ToGetInvoiceDtoFunc = ToGetInvoiceDto.Compile();
 
     //CreateInvoiceDto ==> Invoice
-    public static Func<CreateInvoiceDto.CreateInvoiceLinesDto, InvoiceLine> ToInvoiceLineFunc = createInvoiceLinesDto => new InvoiceLine
+    public static Func<CreateInvoiceDto.CreateInvoiceLinesDto, Models.InvoiceLine> ToInvoiceLineFunc = createInvoiceLinesDto => new Models.InvoiceLine
     {
         Description = createInvoiceLinesDto.Description,
         Quantity = createInvoiceLinesDto.Quantity,
         Price = createInvoiceLinesDto.Price
     };
 
-    public static Func<CreateInvoiceDto, Invoice> ToInvoiceFunc = createInvoiceDto => new Invoice
+    public static Func<CreateInvoiceDto, Models.Invoice> ToInvoiceFunc = createInvoiceDto => new Models.Invoice
     {
         Date = createInvoiceDto.Date,
         Amount = createInvoiceDto.Amount,
-        Status = InvoiceStatus.Draft,
+        Status = Models.InvoiceStatus.Draft,
         InvoiceLines = createInvoiceDto.InvoiceLines.Select(ToInvoiceLineFunc).ToList()
     };
 }
