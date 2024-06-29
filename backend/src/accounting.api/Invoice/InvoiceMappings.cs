@@ -26,7 +26,7 @@ public static class InvoiceMappings
     public static Func<CreateInvoiceDto, Models.Invoice> ToInvoiceFunc = createInvoiceDto => new Models.Invoice
     {
         Date = createInvoiceDto.Date,
-        Amount = createInvoiceDto.Amount,
+        Amount = createInvoiceDto.InvoiceLines.Sum(invoiceLine => invoiceLine.Quantity * invoiceLine.Price),
         Status = Models.InvoiceStatus.Draft,
         InvoiceLines = createInvoiceDto.InvoiceLines.Select(ToInvoiceLineFunc).ToList()
     };

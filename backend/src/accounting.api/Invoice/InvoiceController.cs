@@ -40,4 +40,12 @@ public class InvoiceController(IMediator mediator) : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPut("{id}/submit")]
+    public async Task<IActionResult> SubmitInvoice([FromRoute] string id)
+    {
+        var invoice = await mediator.Send(new SubmitInvoiceCommand { Id = id });
+
+        return Ok(invoice);
+    }
 }

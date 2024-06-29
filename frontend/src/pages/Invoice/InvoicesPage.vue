@@ -29,7 +29,7 @@ async function fetchInvoices() {
         });
 }
 
-let modal: Modal = null;
+let modal: Modal | null = null;
 
 function getModal() {
     if (!modal) {
@@ -40,15 +40,33 @@ function getModal() {
 }
 
 
-function showDeleteModal(id: string) {
+function showDeleteModal(id: string | undefined) {
+    if (!id) {
+        return;
+    }
+
     toDeleteId.value = id;
     getModal().show();
 }
 
 async function deleteInvoice() {
     await axios.delete(`http://localhost:5234/api/Invoice/${toDeleteId.value}`)
-        .then((response) => {
+        .then(() => {
             getModal().hide();
+            fetchInvoices();
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
+
+async function submitInvoice(id: string | undefined) {
+    if (!id) {
+        return;
+    }
+
+    await axios.put(`http://localhost:5234/api/Invoice/${id}/submit`)
+        .then(() => {
             fetchInvoices();
         })
         .catch((error) => {
@@ -76,11 +94,11 @@ fetchInvoices();
             </button>
         </div>
         <div class="card-body">
-            <InvoiceTable :invoices="invoices" @delete="showDeleteModal" />
+            <InvoiceTable :invoices="invoices" @delete="showDeleteModal" @submit="submitInvoice" />
         </div>
 
         <ConfirmModal header="Delete Invoice" body="Are you sure you want to delete this invoice?"
             primaryButtonText="Delete" secondaryButtonText="Cancel" @primaryClick="deleteInvoice"
-            @secondaryClick="() => { toDeleteId = ''; console.log(toDeleteId) }" />
+            @secondaryClick="() => toDeleteId = ''" />
     </div>
 </template>

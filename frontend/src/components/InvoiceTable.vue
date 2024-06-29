@@ -6,8 +6,10 @@ defineProps({
     invoices: { type: Array as () => Invoice[], required: true }
 });
 
-defineEmits(['delete']);
-
+defineEmits<{
+    delete: [string | undefined];
+    submit: [string | undefined];
+}>();
 
 function currency(amount: number) {
     return new Intl.NumberFormat('en-AU', {
@@ -37,9 +39,12 @@ function currency(amount: number) {
                 <td>{{ currency(invoice.amount) }}</td>
                 <td>{{ invoice.status }}</td>
                 <td>
+                    <button v-if="invoice.status == 'Draft'" class="btn btn-info me-3 text-white"
+                        @click="$emit('submit', invoice.id)"><i class="bi bi-send"></i> Submit</button>
                     <button class="btn btn-outline-primary"> <i class="bi bi-printer"></i> Print</button>
                     <button class="btn btn-outline-success mx-3"><i class="bi bi-pencil-square"></i> Edit</button>
-                    <button class="btn btn-outline-danger" @click="$emit('delete', invoice.id)"><i class="bi bi-trash"></i> Delete</button>
+                    <button class="btn btn-outline-danger" @click="$emit('submit', invoice.id)"><i
+                            class="bi bi-trash"></i> Delete</button>
                 </td>
             </tr>
         </tbody>
