@@ -37,9 +37,9 @@ function currency(amount: number) {
                 <td>{{ currency(invoice.amount) }}</td>
                 <td>{{ invoice.status }}</td>
                 <td>
-                    <button class="btn btn-primary">Print</button>
-                    <button class="btn btn-success mx-3">Edit</button>
-                    <button class="btn btn-danger" @click="$emit('delete', invoice.number)">Delete</button>
+                    <button class="btn btn-outline-primary"> <i class="bi bi-printer"></i> Print</button>
+                    <button class="btn btn-outline-success mx-3"><i class="bi bi-pencil-square"></i> Edit</button>
+                    <button class="btn btn-outline-danger" @click="$emit('delete', invoice.id)"><i class="bi bi-trash"></i> Delete</button>
                 </td>
             </tr>
         </tbody>

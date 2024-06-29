@@ -32,4 +32,12 @@ public class InvoiceController(IMediator mediator) : ControllerBase
         var invoice = await mediator.Send(createInvoiceCommand);
         return Ok(invoice);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteInvoice([FromRoute] string id)
+    {
+        await mediator.Send(new DeleteInvoiceCommand { Id = id });
+
+        return NoContent();
+    }
 }

@@ -1,7 +1,7 @@
 import type { InvoiceLines } from "./invoice-lines"
 
 export interface Invoice {
-    id?: number
+    id?: string
     number: number
     amount: number
     date: string
