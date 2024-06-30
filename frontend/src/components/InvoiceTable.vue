@@ -9,6 +9,7 @@ defineProps({
 defineEmits<{
     delete: [string | undefined];
     submit: [string | undefined];
+    markAsPaid: [string | undefined];
 }>();
 
 function currency(amount: number) {
@@ -21,7 +22,7 @@ function currency(amount: number) {
 </script>
 
 <template>
-    <table class="table table-light table-striped  table-bordered">
+    <table class="table table-light table-striped table-bordered">
         <thead>
             <tr>
                 <th>Number</th>
@@ -41,6 +42,8 @@ function currency(amount: number) {
                 <td>
                     <button v-if="invoice.status == 'Draft'" class="btn btn-info me-3 text-white"
                         @click="$emit('submit', invoice.id)"><i class="bi bi-send"></i> Submit</button>
+                    <button v-if="invoice.status == 'Pending'" class="btn btn-info me-3 text-white"
+                        @click="$emit('markAsPaid', invoice.id)"><i class="bi bi-send"></i> Mark as Paid</button>
                     <button class="btn btn-outline-primary"> <i class="bi bi-printer"></i> Print</button>
                     <button class="btn btn-outline-success mx-3"><i class="bi bi-pencil-square"></i> Edit</button>
                     <button class="btn btn-outline-danger" @click="$emit('submit', invoice.id)"><i

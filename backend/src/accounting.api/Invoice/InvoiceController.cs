@@ -48,4 +48,12 @@ public class InvoiceController(IMediator mediator) : ControllerBase
 
         return Ok(invoice);
     }
+
+    [HttpPut("{id}/mark-as-paid")]
+    public async Task<IActionResult> MarkInvoiceAsPaid([FromRoute] string id)
+    {
+        var invoice = await mediator.Send(new MarkInvoiceAsPaidCommand { Id = id });
+
+        return Ok(invoice);
+    }
 }

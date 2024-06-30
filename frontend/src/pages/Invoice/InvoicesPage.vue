@@ -74,6 +74,20 @@ async function submitInvoice(id: string | undefined) {
         });
 }
 
+async function markAsPaid(id: string | undefined) {
+    if (!id) {
+        return;
+    }
+
+    await axios.put(`http://localhost:5234/api/Invoice/${id}/mark-as-paid`)
+        .then(() => {
+            fetchInvoices();
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
+
 function goToCreateInvoice() {
     router.push('invoices/create');
 }
@@ -94,7 +108,7 @@ fetchInvoices();
             </button>
         </div>
         <div class="card-body">
-            <InvoiceTable :invoices="invoices" @delete="showDeleteModal" @submit="submitInvoice" />
+            <InvoiceTable :invoices="invoices" @delete="showDeleteModal" @submit="submitInvoice" @mark-as-paid="markAsPaid" />
         </div>
 
         <ConfirmModal header="Delete Invoice" body="Are you sure you want to delete this invoice?"
