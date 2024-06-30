@@ -17,6 +17,8 @@ const breadCrumbs = ref([
 
 const invoices = ref<Invoice[]>([]);
 const toDeleteId = ref('');
+const toSubmitId = ref('');
+const toMarkAsPaidId = ref('');
 
 async function fetchInvoices() {
     // Fetch invoices from the API
@@ -31,14 +33,13 @@ async function fetchInvoices() {
 
 let modal: Modal | null = null;
 
-function getModal() {
+function getModal(id: 'deleteModal' | 'submitModal' | 'markAsPaidModal') {
     if (!modal) {
-        modal = new Modal('#deleteModal');
+        modal = new Modal(`#${id}`);
     }
 
     return modal;
 }
-
 
 function showDeleteModal(id: string | undefined) {
     if (!id) {
@@ -46,13 +47,13 @@ function showDeleteModal(id: string | undefined) {
     }
 
     toDeleteId.value = id;
-    getModal().show();
+    getModal('deleteModal').show();
 }
 
 async function deleteInvoice() {
     await axios.delete(`http://localhost:5234/api/Invoice/${toDeleteId.value}`)
         .then(() => {
-            getModal().hide();
+            getModal('deleteModal').hide();
             fetchInvoices();
         })
         .catch((error) => {
@@ -60,13 +61,24 @@ async function deleteInvoice() {
         });
 }
 
-async function submitInvoice(id: string | undefined) {
+
+function showSubmitModal(id: string | undefined) {
     if (!id) {
         return;
     }
 
-    await axios.put(`http://localhost:5234/api/Invoice/${id}/submit`)
+    toSubmitId.value = id;
+    getModal('submitModal').show();
+}
+
+async function submitInvoice() {
+    if (!toSubmitId.value) {
+        return;
+    }
+
+    await axios.put(`http://localhost:5234/api/Invoice/${toSubmitId.value}/submit`)
         .then(() => {
+            getModal('submitModal').hide();
             fetchInvoices();
         })
         .catch((error) => {
@@ -108,11 +120,17 @@ fetchInvoices();
             </button>
         </div>
         <div class="card-body">
-            <InvoiceTable :invoices="invoices" @delete="showDeleteModal" @submit="submitInvoice" @mark-as-paid="markAsPaid" />
+            <InvoiceTable :invoices="invoices" @delete="showDeleteModal" @submit="showSubmitModal"
+                @mark-as-paid="markAsPaid" />
         </div>
 
-        <ConfirmModal header="Delete Invoice" body="Are you sure you want to delete this invoice?"
+        <ConfirmModal id="deleteModal" header="Delete Invoice" body="Are you sure you want to delete this invoice?"
             primaryButtonText="Delete" secondaryButtonText="Cancel" @primaryClick="deleteInvoice"
             @secondaryClick="() => toDeleteId = ''" />
+
+
+        <ConfirmModal id="submitModal" header="Submit Invoice" body="Are you sure you want to submit this invoice?"
+            primaryButtonText="Submit" secondaryButtonText="Cancel" @primaryClick="submitInvoice"
+            @secondaryClick="() => toSubmitId = ''" />
     </div>
 </template>

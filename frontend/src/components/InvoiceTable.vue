@@ -46,7 +46,7 @@ function currency(amount: number) {
                         @click="$emit('markAsPaid', invoice.id)"><i class="bi bi-send"></i> Mark as Paid</button>
                     <button class="btn btn-outline-primary"> <i class="bi bi-printer"></i> Print</button>
                     <button class="btn btn-outline-success mx-3"><i class="bi bi-pencil-square"></i> Edit</button>
-                    <button class="btn btn-outline-danger" @click="$emit('submit', invoice.id)"><i
+                    <button class="btn btn-outline-danger" @click="$emit('delete', invoice.id)"><i
                             class="bi bi-trash"></i> Delete</button>
                 </td>
             </tr>
